@@ -22,18 +22,7 @@ export async function getStaticProps() {
 
   const client = new MongoClient(
     "mongodb+srv://shivam18557:Shivam@cluster0.njwclar.mongodb.net/meetups?retryWrites=true&w=majority",
-    // {
-    //   serverApi: {
-    //     version: ServerApiVersion.v1,
-    //     strict: true,
-    //     deprecationErrors: true,
-    //   },
-    // }
   );
-
-  // console.log(data);
-
-  // console.log("check connection");
 
   await client.connect();
 
