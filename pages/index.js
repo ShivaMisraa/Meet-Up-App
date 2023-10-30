@@ -1,12 +1,26 @@
-import React from "react";
+import React, { Fragment } from "react";
+import Head from "next/head";
 import MeetupList from "../components/meetups/MeetupList";
 import { MongoClient } from "mongodb";
 
 
 
 const HomePage = (props) => {
-  return <MeetupList meetups={props.meetups} />;
+  return (
+  <Fragment>
+  <Head>
+    <title>NextJS Meetup</title>
+    <meta
+    name= 'Description'
+    content= 'Browse a huge list of highly active React meetups'
+    />
+
+  </Head>
+  <MeetupList meetups={props.meetups} />;
+  </Fragment>
+  )
 };
+
 
 // export async function getServerSideProps(context){
 //   const req = context.req;
