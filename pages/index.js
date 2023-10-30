@@ -1,34 +1,8 @@
 import React from "react";
 import MeetupList from "../components/meetups/MeetupList";
+import { MongoClient } from "mongodb";
 
 
-const DUMMY_MEETUPS = [
-  {
-    id: "m1",
-    title: "A Fisrt Meetup",
-    image:
-      "https://images.indianexpress.com/2021/02/UP-annual-budget-Ayodhya.jpg",
-    address: "Ram Janmbhoomi, Ayodhya",
-    description: "This is a first meetup!",
-  },
-  {
-    id: "m2",
-    title: "A Second Meetup",
-    image:
-      "https://gumlet.assettype.com/outlooktraveller%2F2023-10%2Fcb184637-74f7-44f7-ac0d-364eadb85887%2FAyodhya.jpg?w=1200&auto=format%2Ccompress&ogImage=true&enlarge=true",
-    address: "Naya Ghat, Ayodhya",
-    description: "This is a second meetup!",
-  },
-  {
-    id: "m3",
-    title: "A third Meetup",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoDLm0iuh634ylm1q2CDSX52Oj1bqnbaouhg&usqp=CAU",
-    address: "Naya Ghat, Ayodhya",
-    address: "Saryu Nadi, Ayodhya",
-    description: " This is a third meetup!",
-  },
-];
 
 const HomePage = (props) => {
   return <MeetupList meetups={props.meetups} />;
@@ -45,9 +19,40 @@ const HomePage = (props) => {
 
 export async function getStaticProps() {
   // fetch from an API
+
+  const client = new MongoClient(
+    "mongodb+srv://shivam18557:Shivam@cluster0.njwclar.mongodb.net/meetups?retryWrites=true&w=majority",
+    // {
+    //   serverApi: {
+    //     version: ServerApiVersion.v1,
+    //     strict: true,
+    //     deprecationErrors: true,
+    //   },
+    // }
+  );
+
+  // console.log(data);
+
+  // console.log("check connection");
+
+  await client.connect();
+
+  const db = client.db("meetups");
+
+  const meetupCollection = db.collection("meetups"); 
+
+  const meetups= await meetupCollection.find().toArray();
+  client.close();
+
   return {
     props: {
-      meetups: DUMMY_MEETUPS,
+      meetups: meetups.map(meetup=>({
+        title:meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString()
+
+      })) ,
     },
     revalidate: 10, //It will re-generate page after 10 seconds
   };
